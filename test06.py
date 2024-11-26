@@ -1,7 +1,6 @@
 ### login using imports & hidden menu touch
 
 from selenium.webdriver import Chrome
-from selenium.webdriver import Keys
 import login
 import time
 
