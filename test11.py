@@ -73,12 +73,16 @@ def main():
     try:
         cart_item_quantity = driver.find_element(By.XPATH, '//*[@id="cart_contents_container"]/div/div[1]/div[3]/div[1]')
         cart_item_title = driver.find_element(By.XPATH, '//*[@id="item_0_title_link"]/div')
+        cart_item_price = driver.find_element(By.XPATH, '//*[@id="cart_contents_container"]/div/div[1]/div[3]/div[2]/div[2]/div')
     except NoSuchElementException as e:
         print('Error')
         return
 
+    print('Checking cart\'s item quantity, title and price', end='')
     assert cart_item_quantity.text == '1', f"Expected 1 item in cart, but got {cart_item_quantity.text} instead"
     assert cart_item_title.text == product.name, f"Expected the product title in cart to be {product.name}, but got {cart_item_title.text} instead"
+    assert cart_item_price.text == product.price, f"Expected the product price in cart to be {product.price}, but got {cart_item_price.text} instead"
+    print('OK')
     
     # Close driver
     driver.quit()
