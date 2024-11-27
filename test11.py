@@ -36,7 +36,7 @@ def main():
     # Locate product details
     print("Locating product details for the product...", end='')
     try:
-        product_title = driver.find_element(By.ID, 'item_0_title_link')
+        product_title = driver.find_element(By.XPATH, '//*[@id="item_0_title_link"]')
         product_add_to_cart_button = driver.find_element(By.XPATH, '//*[@id="add-to-cart-sauce-labs-bike-light"]')
         product_price = driver.find_element(By.XPATH, '//*[@id="inventory_container"]/div/div[2]/div[2]/div[2]/div')
         product_description = driver.find_element(By.XPATH, '//*[@id="inventory_container"]/div/div[2]/div[2]/div[1]/div')
@@ -46,14 +46,9 @@ def main():
 
     # Create a Product object and add it to cart
     product = Product(product_title, product_add_to_cart_button, product_price, product_description)
-    print(f'Adding "{product.title_element.text}" product to cart.')
+    print(f'Adding "{product.title_element.text}" product to cart')
     product.add_to_cart()
     
-    # Print the product's info
-    # print(f'product: {product.name}')
-    # print(f'price: {product.price}')
-    # print(f'desc: {product.description}')
-
     # Locate cart button and its bage
     cart_button = driver.find_element(By.XPATH, '//*[@id="shopping_cart_container"]/a')
     print('Locating cart button bage...', end='')
@@ -77,8 +72,7 @@ def main():
     except NoSuchElementException as e:
         print('Error')
         return
-
-    print('Checking cart\'s item quantity, title and price', end='')
+    print('Checking cart\'s item quantity, title and price...', end='')
     assert cart_item_quantity.text == '1', f"Expected 1 item in cart, but got {cart_item_quantity.text} instead"
     assert cart_item_title.text == product.name, f"Expected the product title in cart to be {product.name}, but got {cart_item_title.text} instead"
     assert cart_item_price.text == product.price, f"Expected the product price in cart to be {product.price}, but got {cart_item_price.text} instead"
