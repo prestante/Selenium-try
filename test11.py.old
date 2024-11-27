@@ -1,5 +1,5 @@
 """
-This module contains reusable components for testing e-commerce functionality.
+This script tests adding a product to cart and compares titles and prices correspondence.
 """
 
 import time
@@ -26,68 +26,59 @@ class Product:
         self.add_to_cart_element.click()
 
 
-def setup_driver():
-    """Initializes the WebDriver."""
-    return Chrome()
+def main():
+    # Initialize driver
+    driver = Chrome()
 
-
-def login_user(driver):
-    """Logs in using the login module."""
+    # Log in
     login.login(driver)
 
-
-def add_product_to_cart(driver):
-    """Adds a product to the cart and verifies cart details."""
+    # Locate product details
+    print("Locating product details for the product...", end='')
     try:
-        # Locate product details
         product_title = driver.find_element(By.XPATH, '//*[@id="item_0_title_link"]')
         product_add_to_cart_button = driver.find_element(By.XPATH, '//*[@id="add-to-cart-sauce-labs-bike-light"]')
         product_price = driver.find_element(By.XPATH, '//*[@id="inventory_container"]/div/div[2]/div[2]/div[2]/div')
         product_description = driver.find_element(By.XPATH, '//*[@id="inventory_container"]/div/div[2]/div[2]/div[1]/div')
+        print('OK')
     except NoSuchElementException as e:
-        raise Exception("Product details could not be located.") from e
+        print('Error')
 
-    # Create a Product object and add it to the cart
+    # Create a Product object and add it to cart
     product = Product(product_title, product_add_to_cart_button, product_price, product_description)
+    print(f'Adding "{product.title_element.text}" product to cart')
     product.add_to_cart()
-
-    # Check cart button badge
+    
+    # Locate cart button and its bage
+    cart_button = driver.find_element(By.XPATH, '//*[@id="shopping_cart_container"]/a')
+    print('Locating cart button bage...', end='')
     try:
         cart_button_badge = driver.find_element(By.XPATH, '//*[@id="shopping_cart_container"]/a/span')
+        print('OK')
     except NoSuchElementException as e:
-        raise Exception("Cart badge not found after adding product.") from e
+        print('Error')
+        return
 
-    return product
-
-
-def go_to_cart(driver):
-    """Navigates to the cart page."""
-    cart_button = driver.find_element(By.XPATH, '//*[@id="shopping_cart_container"]/a')
+    # Go to cart
+    print('Going into cart')
     cart_button.click()
 
-
-def verify_cart_contents(driver, product):
-    """Verifies the cart contents."""
+    # Check cart's title and price
+    print('Locating cart\'s content')
     try:
         cart_item_quantity = driver.find_element(By.XPATH, '//*[@id="cart_contents_container"]/div/div[1]/div[3]/div[1]')
         cart_item_title = driver.find_element(By.XPATH, '//*[@id="item_0_title_link"]/div')
         cart_item_price = driver.find_element(By.XPATH, '//*[@id="cart_contents_container"]/div/div[1]/div[3]/div[2]/div[2]/div')
     except NoSuchElementException as e:
-        raise Exception("Cart contents not found.") from e
-
+        print('Error')
+        return
+    print('Checking cart\'s item quantity, title and price...', end='')
     assert cart_item_quantity.text == '1', f"Expected 1 item in cart, but got {cart_item_quantity.text} instead"
     assert cart_item_title.text == product.name, f"Expected the product title in cart to be {product.name}, but got {cart_item_title.text} instead"
     assert cart_item_price.text == product.price, f"Expected the product price in cart to be {product.price}, but got {cart_item_price.text} instead"
-
-
-def main():
-    """Standalone usage for testing add-to-cart functionality."""
-    driver = setup_driver()
-    login_user(driver)
-    product = add_product_to_cart(driver)
-    go_to_cart(driver)
-    verify_cart_contents(driver, product)
-    time.sleep(1)
+    print('OK')
+    
+    # Close driver
     driver.quit()
 
 
