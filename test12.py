@@ -11,6 +11,7 @@ from test11 import setup_driver, login_user, add_product_to_cart, go_to_cart, ve
 CHECKOUT_BUTTON_XPATH = '//*[@id="checkout"]'
 CHECKOUT_ITEM_TITLE_XPATH = '//*[@id="item_0_title_link"]/div'
 CHECKOUT_ITEM_PRICE_XPATH = '//*[@id="checkout_summary_container"]/div/div[1]/div[3]/div[2]/div[2]/div'
+CHECKOUT_ITEM_TOTAL_PRICE_XPATH = '//*[@id="checkout_summary_container"]/div/div[2]/div[6]'
 CHECKOUT_FINISH_MESSAGE_XPATH = '//*[@id="checkout_complete_container"]/h2'
 
 
@@ -38,12 +39,14 @@ def verify_order_summary(driver, product):
     try:
         summary_title = driver.find_element(By.XPATH, CHECKOUT_ITEM_TITLE_XPATH)
         summary_price = driver.find_element(By.XPATH, CHECKOUT_ITEM_PRICE_XPATH)
+        summary_total_price = driver.find_element(By.XPATH, CHECKOUT_ITEM_TOTAL_PRICE_XPATH)
     except NoSuchElementException as e:
         raise Exception("Order summary not found.") from e
 
     assert summary_title.text == product.name, f"Expected summary title {product.name}, got {summary_title.text}"
     assert summary_price.text == product.price, f"Expected summary price {product.price}, got {summary_price.text}"
-
+    assert summary_total_price.text == f"Item total: {product.price}", f"Expected summary total price 'Item total: {product.price}', got '{summary_total_price.text}'"
+    
 
 def finish_checkout(driver):
     """Click Finish button, check 'thanks' message and click Back Home button"""
