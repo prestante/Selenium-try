@@ -3,7 +3,6 @@ This script tests radio button functionality on demoqa.com
 """
 
 from time import sleep
-from selenium.common.exceptions import NoSuchElementException
 from test21 import setup_driver, open_site
 
 RADIO_IMPRESSIVE_XPATH = '//label[@for="impressiveRadio"]'

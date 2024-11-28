@@ -3,7 +3,6 @@ This script tests checkboxes functionality on demoqa.com
 """
 
 from time import sleep
-from selenium.common.exceptions import NoSuchElementException
 from test21 import setup_driver, open_site
 
 EXPAND_ALL_BUTTON_XPATH = '//button[@aria-label="Expand all"]'
