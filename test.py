@@ -1,15 +1,14 @@
-import time
-from random import random
+import re
 
-str = ''
+url = "https://datika.me/en/category/black-friday/?price_max=2736&another_param=999999&price_min=666&other_param=11111&"
 
-# Print text without a newline
-print("Processing", end='', flush=True)
+# Extract all matches
+price_min_matches = re.findall(r"price_min=(\d+)", url)
+price_max_matches = re.findall(r"price_max=(\d+)", url)
 
-# Simulate a delay to show the effect
-for i in range(10):
-    time.sleep(random())  # Wait for some random time
-    print('.', end='', flush=True)  # Print a dot without a newline
+# Get the first match or handle duplicates as needed
+price_min = price_min_matches[0] if price_min_matches else None
+price_max = price_max_matches[0] if price_max_matches else None
 
-# Move to the next line after the process is complete
-print("Done")
+print("Min Price:", price_min)
+print("Max Price:", price_max)
